@@ -31,52 +31,7 @@ module.exports = {
           use: {
             loader: 'babel-loader',              
           }
-        }, 
-        {
-          test: /\.css$/i,
-          use: [  
-            {
-              loader: 'style-loader'
-            },
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: true
-              }
-            }
-          ],
-          include: /\.module\.css$/
-        },  
-        {
-          test: /\.css$/,
-          use: [           
-            'css-loader'
-          ],
-          exclude: /\.module\.css$/
-        },
-          // IMAGES
-        {
-          test: /\.(png|jpe?g|gif)$/i,
-          use: {
-            loader: 'file-loader',
-            options: {
-                name: 'images/[name].[contenthash].[ext]'
-            }
-          }
-        }, 
-        // SVG
-        {
-            test: /\.svg$/,
-            use: [
-                'raw-loader'
-            ]
-        },
-        {
-          test: /\.html$/i,
-          loader: 'html-loader',
-          options: {}
-        }   
+        },          
       ],
     },
     plugins: [
