@@ -3,25 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
-    devtool: 'source-map',
+    mode: 'development',  
     entry: { 
-      app: path.resolve('src', 'index.js'),
-      analytics: path.resolve('src', 'analytics.js')
+      app: path.resolve('src', 'index.js'),      
     },
     output: {
-      publicPath: '/',
-      path: path.resolve('dist'),
-      filename: '[name].[contenthash].js',
-    },
-    devServer: {
-      host: '0.0.0.0'
-    },
-    resolve: {
-      modules: [
-          'src',
-          'node_modules',
-      ],
+      filename: '[name].js',
     },
     module: {
       rules: [        
@@ -31,52 +18,7 @@ module.exports = {
           use: {
             loader: 'babel-loader',              
           }
-        }, 
-        {
-          test: /\.css$/i,
-          use: [  
-            {
-              loader: 'style-loader'
-            },
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: true
-              }
-            }
-          ],
-          include: /\.module\.css$/
-        },  
-        {
-          test: /\.css$/,
-          use: [           
-            'css-loader'
-          ],
-          exclude: /\.module\.css$/
-        },
-          // IMAGES
-        {
-          test: /\.(png|jpe?g|gif)$/i,
-          use: {
-            loader: 'file-loader',
-            options: {
-                name: 'images/[name].[contenthash].[ext]'
-            }
-          }
-        }, 
-        // SVG
-        {
-            test: /\.svg$/,
-            use: [
-                'raw-loader'
-            ]
-        },
-        {
-          test: /\.html$/i,
-          loader: 'html-loader',
-          options: {}
-        }   
+        }        
       ],
     },
     plugins: [
