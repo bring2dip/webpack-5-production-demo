@@ -54,29 +54,7 @@ module.exports = {
             'css-loader'
           ],
           exclude: /\.module\.css$/
-        },
-          // IMAGES
-        {
-          test: /\.(png|jpe?g|gif)$/i,
-          use: {
-            loader: 'file-loader',
-            options: {
-                name: 'images/[name].[contenthash].[ext]'
-            }
-          }
-        }, 
-        // SVG
-        {
-            test: /\.svg$/,
-            use: [
-                'raw-loader'
-            ]
-        },
-        {
-          test: /\.html$/i,
-          loader: 'html-loader',
-          options: {}
-        }   
+        },      
       ],
     },
     plugins: [
