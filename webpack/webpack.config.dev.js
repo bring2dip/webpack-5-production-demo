@@ -1,13 +1,28 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const { getFiles } = require('./common');
+
+const entryFiles = getFiles(path.resolve('src'));
+
+const dynamicEntryMapObject = entryFiles.reduce((entryMaps, item) => {
+  return {
+    ...entryMaps,
+    [item.name]: item.filePath,
+  }
+}, {});
+
+const dynamicHtmlPlugins = entryFiles.map((item) => {
+  return new HtmlWebpackPlugin({        
+    chunks: [item.name],
+    filename: `${item.name}.html`,
+    template: path.resolve(`src/views/${item.name}.html`),
+  });
+});
 
 module.exports = {
     mode: 'development',
     devtool: 'source-map',
-    entry: { 
-      app: path.resolve('src', 'index.js'),
-      analytics: path.resolve('src', 'analytics.js')
-    },
+    entry: dynamicEntryMapObject,
     output: {
       publicPath: '/',
       path: path.resolve('dist'),
@@ -49,10 +64,8 @@ module.exports = {
         },  
         {
           test: /\.css$/,
-          use: [           
-            'css-loader'
-          ],
-          exclude: /\.module\.css$/
+          use: ['style-loader', 'css-loader'],
+          include: /global\.css$/
         },
           // IMAGES
         {
@@ -79,15 +92,16 @@ module.exports = {
       ],
     },
     plugins: [
-      new HtmlWebpackPlugin({        
-        chunks: ['app'],
-        filename: 'index.html',
-        template: path.resolve('src/views/index.html'),       
-      }),
-      new HtmlWebpackPlugin({        
-        chunks: ['analytics'],
-        filename: 'analytics.html',
-        template: path.resolve('src/views/analytics.html')      
-      })
+      // new HtmlWebpackPlugin({        
+      //   chunks: ['index'],
+      //   filename: 'index.html',
+      //   template: path.resolve('src/views/index.html'),       
+      // }),
+      // new HtmlWebpackPlugin({        
+      //   chunks: ['analytics'],
+      //   filename: 'analytics.html',
+      //   template: path.resolve('src/views/analytics.html')      
+      // })
+      ...dynamicHtmlPlugins,
     ]
 };

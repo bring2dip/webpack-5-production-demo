@@ -3,13 +3,28 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const path = require('path');
+const { getFiles } = require('./common');
+
+const entryFiles = getFiles(path.resolve('src'));
+
+const dynamicEntryMapObject = entryFiles.reduce((entryMaps, item) => {
+  return {
+    ...entryMaps,
+    [item.name]: item.filePath,
+  }
+}, {});
+
+const dynamicHtmlPlugins = entryFiles.map((item) => {
+  return new HtmlWebpackPlugin({        
+    chunks: [item.name],
+    filename: `${item.name}.html`,
+    template: path.resolve(`src/views/${item.name}.html`),
+  });
+});
 
 module.exports = {
     mode: 'production',
-    entry: { 
-      app: path.resolve('src', 'index.js'),
-      analytics: path.resolve('src', 'analytics.js')
-    },
+    entry: dynamicEntryMapObject,
     output: {
       publicPath: '/',
       path: path.resolve('dist'),
@@ -84,16 +99,7 @@ module.exports = {
       }),
       new CleanWebpackPlugin(), 
       new WebpackManifestPlugin({}),
-      new HtmlWebpackPlugin({        
-        chunks: ['app'],
-        filename: 'index.html',
-        template: path.resolve('src/views/index.html'),       
-      }),
-      new HtmlWebpackPlugin({        
-        chunks: ['analytics'],
-        filename: 'analytics.html',
-        template: path.resolve('src/views/analytics.html')      
-      })
+      ...dynamicHtmlPlugins,
     ],
     optimization: {
       runtimeChunk: 'single',
